@@ -12,6 +12,7 @@ namespace DeptModel
         }
         public String DepartmentName
         {
+            // to check
             set;
             get;
         }
