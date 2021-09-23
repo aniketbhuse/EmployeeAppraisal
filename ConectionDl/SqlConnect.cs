@@ -27,18 +27,18 @@ namespace ConectionDl
                         j = Convert.ToInt32(Console.ReadLine());
                         if(j == 1)
                         { 
-                            Console.WriteLine("Enter EmpId EmpName RoleId JoinDate");
-                            int Empid;
-                            Empid = Convert.ToInt32(Console.ReadLine());
-                            String EmpName;
-                            EmpName = Console.ReadLine();
-                            int RoleId;
-                            RoleId = Convert.ToInt32(Console.ReadLine());
-                            String JoinDate;
-                            JoinDate = Console.ReadLine();
+                            Console.WriteLine("Enter Empid CurrentRole NewAppraisalDate RoleId");
+                            int empid;
+                            String CurrentRole;
+                            String NewAPDate;
+                            int roleid;
+                            empid = Convert.ToInt32(Console.ReadLine());
+                            CurrentRole = Console.ReadLine();
+                            NewAPDate =Console.ReadLine();
+                            roleid = Convert.ToInt32(Console.ReadLine());
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
-                            SqlCommand cmd = new SqlCommand("insert into Employee values('"+Empid+"','"+EmpName+"','"+RoleId+"','"+JoinDate+"')",con);
+                            SqlCommand cmd = new SqlCommand("insert into EmpAppraisal(empid,CurrentRole,NewAPDate,roleid) values(" + empid+",'"+CurrentRole+"','"+NewAPDate+"',"+roleid+")",con);
                             cmd.ExecuteNonQuery();
                             Console.ReadKey();
                             con.Close();
@@ -46,13 +46,16 @@ namespace ConectionDl
                         }
                         else if(j == 2)
                         {
-                            String EmpRole;
-                            Console.WriteLine("Enter new Role");
-                            EmpRole = Console.ReadLine();
+                            String  NewRole;
+                            Console.WriteLine("Enter New Role And Empid");
+                            NewRole = Console.ReadLine();
+                            int empId;
+                            empId = Convert.ToInt32(Console.ReadLine());
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
-                            SqlCommand cmd = new SqlCommand("", con);
+                            SqlCommand cmd = new SqlCommand("update EmpAppraisal set NewRole ='"+NewRole+"' where EmpId = "+empId+"",con);
                             cmd.ExecuteNonQuery();
+                            Console.ReadKey();
                             con.Close();
                             Console.WriteLine("\nEnter Your Choice");
                         }
@@ -60,7 +63,7 @@ namespace ConectionDl
                         {
                             int EmpId;
                             String NewRole;
-                            Console.WriteLine("Enter  NewRole and EmpId to Modify Role");
+                            Console.WriteLine("Enter NewRole and EmpId to Modify Role");
                             NewRole = Console.ReadLine();
                             EmpId = Convert.ToInt32(Console.ReadLine());
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
@@ -148,7 +151,7 @@ namespace ConectionDl
                     Console.WriteLine("Employee who did not have Appraisal :-");
                     SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                     con.Open();
-                    SqlCommand cmd = new SqlCommand("select * from EmpAppraisal where  NewRole='Null'", con);
+                    SqlCommand cmd = new SqlCommand("select * from EmpAppraisal where NewRole is null", con);
                     dr = cmd.ExecuteReader();
                     Console.Write("Empid\tCurrentRole\t\tNewRole\t\n");
                     while (dr.Read())
