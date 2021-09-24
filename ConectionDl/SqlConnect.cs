@@ -12,7 +12,7 @@ namespace ConectionDl
             int k,j;
             Console.WriteLine("----*---- Appraisal History of Employee ----*----\n");
             Console.WriteLine("1. Add information about appraisal for any employee .\n2. List of Employee who joined as 'Intern' And now are 'Manger'.\n3. Employee with maximum Appraisal.\n4. Employee role was not changed after Appraisal.\n5. Employee who did not have Appraisal.\n6. Exit.");
-            Console.WriteLine("\n ---------*--------*----------*---------");
+            Console.WriteLine("\n ---------*---------*----------*---------");
             Console.WriteLine("Enter Your Choice");
             do
             {
@@ -20,7 +20,7 @@ namespace ConectionDl
                 if(k == 1)
                 {
                     Console.WriteLine("----*---- Add Employee Details ----*----\n");
-                    Console.WriteLine("1.Add Employee EmpId EmpName RoleId JoinDate. \n2. Add new Roles \n3. Modify Roles\n4. Delete Roles\n5. Exit\n");
+                    Console.WriteLine("1. Add Employee EmpId EmpName RoleId JoinDate. \n2. Add new Roles \n3. Modify Roles\n4. Delete Roles\n5. Exit\n");
                     Console.WriteLine("Enter Your Choice");
                     do
                     {
@@ -39,9 +39,19 @@ namespace ConectionDl
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
                             SqlCommand cmd = new SqlCommand("insert into EmpAppraisal(empid,CurrentRole,NewAPDate,roleid) values(" + empid+",'"+CurrentRole+"','"+NewAPDate+"',"+roleid+")",con);
-                            cmd.ExecuteNonQuery();
-                            Console.ReadKey();
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                string msg = "Insert Error";
+                                msg += ex.Message;
+                            }
+                            Console.WriteLine("Record Inserted");
+                            //Console.ReadKey();
                             con.Close();
+
                             Console.WriteLine("\nEnter Your Choice");
                         }
                         else if(j == 2)
@@ -54,9 +64,19 @@ namespace ConectionDl
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
                             SqlCommand cmd = new SqlCommand("update EmpAppraisal set NewRole ='"+NewRole+"' where EmpId = "+empId+"",con);
-                            cmd.ExecuteNonQuery();
-                            Console.ReadKey();
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                string msg = "Insert Error";
+                                msg += ex.Message;
+                            }
+                            Console.WriteLine("Record Inserted");
+                            //Console.ReadKey();
                             con.Close();
+
                             Console.WriteLine("\nEnter Your Choice");
                         }
                         else if(j == 3)
@@ -69,9 +89,19 @@ namespace ConectionDl
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
                             SqlCommand cmd = new SqlCommand("update EmpAppraisal set NewRole = '"+NewRole+"' where EmpId ='"+EmpId+"'", con);
-                            cmd.ExecuteNonQuery();
-                            Console.ReadKey();
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                string msg = "Role Not Modified";
+                                msg += ex.Message;
+                            }
+                            Console.WriteLine("Role Modify");
+                            //Console.ReadKey();
                             con.Close();
+
                             Console.WriteLine("\nEnter Your Choice");
 
                         }
@@ -83,15 +113,24 @@ namespace ConectionDl
                             SqlConnection con = new SqlConnection("data source=DESKTOP-3AICL2B;initial catalog=Employee; integrated security=true;");
                             con.Open();
                             SqlCommand cmd = new SqlCommand("delete EmpAppraisal where Empid ='"+EmpId+"'", con);
-                            cmd.ExecuteNonQuery();
-                            Console.ReadKey();
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (System.Data.SqlClient.SqlException ex)
+                            {
+                                string msg = "Record Not Delete";
+                                msg += ex.Message;
+                            }
+                            Console.WriteLine("Record Deleted..");
+                            //Console.ReadKey();
                             con.Close();
                             Console.WriteLine("\nEnter Your Choice");
 
                         }
                         else if(j == 5)
                         {
-                            Console.WriteLine("Data Added SucessFully...!\n");
+                            Console.WriteLine("Operation done SucessFully...!\n");
                             Console.WriteLine("Enter Your Choice");
                         }
                         else
@@ -110,7 +149,7 @@ namespace ConectionDl
                     Console.Write("EmpName\tJoinDate\tCurrentRole\tNewRole\t\n");
                     while (dr.Read())
                     {
-                        Console.Write("{0}\t{1}\t{2}\t\t{3}\n", dr[0], dr[1], dr[2],dr[3]);
+                        Console.Write("{0}\t{1}\t\t{2}\t\t{3}\n", dr[0],dr[1],dr[2],dr[3]);
                     }
                     con.Close();
                     Console.WriteLine("\nEnter Your Choice");
@@ -122,10 +161,10 @@ namespace ConectionDl
                     con.Open();
                     SqlCommand cmd = new SqlCommand("select CurrentRole, NewRole, EmpId from EmpAppraisal where roleid= (select  MAX(roleid) from EmpAppraisal)", con);
                     dr = cmd.ExecuteReader();
-                    Console.Write("CurrentRole\tNewRole\t\tEmpId\n");
+                    Console.Write("CurrentRole\t\tNewRole\t\tEmpId\n");
                     while (dr.Read())
                     {
-                        Console.Write("{0}\t\t{1}\t\t{2}\n", dr[0], dr[1], dr[2]);
+                        Console.Write("{0}\t{1}\t{2}\n", dr[0], dr[1], dr[2]);
                     }
                     con.Close();
                     Console.WriteLine("\nEnter Your Choice");
@@ -137,7 +176,7 @@ namespace ConectionDl
                     con.Open();
                     SqlCommand cmd = new SqlCommand(" select emp.EmpName,ap.CurrentRole,ap.NewRole from Employee emp inner join EmpAppraisal ap on emp.EmpId = ap.EmpId where CurrentRole = NewRole", con);
                     dr = cmd.ExecuteReader();
-                    Console.Write("EmpName\t\tCurrentRole\t\tNewRole\n");
+                    Console.Write("EmpName\t\tCurrentRole\t\tNewRole\t\n");
                     while (dr.Read())
                     {
                         Console.Write("{0}\t\t{1}\t\t{2}\n", dr[0], dr[1], dr[2]);
